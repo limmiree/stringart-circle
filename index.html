@@ -5,17 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>중3 수학: 원의 성질과 깨진 접시 복원하기</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-            touch-action: none; /* 방해되는 모바일 스와이프 방지 */
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #f8fafc;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
         .canvas-container {
             touch-action: none;
         }
-        /* 커스텀 슬라이더 스타일 */
+        /* Custom styled slider for all browsers */
         input[type=range] {
             -webkit-appearance: none;
             width: 100%;
@@ -23,109 +24,125 @@
         }
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            height: 20px;
-            width: 20px;
+            height: 22px;
+            width: 22px;
             border-radius: 50%;
-            background: #3b82f6;
+            background: #2563eb;
             cursor: pointer;
             margin-top: -8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+            border: 2px solid #ffffff;
+            transition: transform 0.1s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:active {
+            transform: scale(1.15);
         }
         input[type=range]::-webkit-slider-runnable-track {
             width: 100%;
-            height: 6px;
+            height: 8px;
             cursor: pointer;
-            background: #d1d5db;
-            border-radius: 3px;
+            background: #e2e8f0;
+            border-radius: 4px;
         }
     </style>
 </head>
-<body class="text-gray-800 min-h-screen flex flex-col p-4 md:p-8">
+<body class="text-slate-800 min-h-screen flex flex-col justify-between p-3 sm:p-5 md:p-8 selection:bg-blue-100">
 
-    <div class="max-w-5xl w-full mx-auto flex-grow flex flex-col gap-6">
+    <div class="max-w-6xl w-full mx-auto flex-grow flex flex-col gap-5 sm:gap-6">
         
-        <!-- 헤더 영역 및 탭 전환 버튼 -->
-        <header class="text-center space-y-4">
-            <h1 class="text-2xl md:text-4xl font-bold text-blue-900 tracking-tight">중3 수학: 원의 성질 체험실</h1>
+        <!-- HEADER & NAVIGATION TABS -->
+        <header class="text-center space-y-3 sm:space-y-4">
+            <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+                중3 수학: 원의 성질 체험실
+            </h1>
             
-            <!-- 탭 메뉴 -->
-            <div class="flex justify-center border-b border-gray-300 gap-2 md:gap-4">
-                <button id="tab1Btn" onclick="switchTab(1)" class="py-2 px-4 font-bold text-sm md:text-base text-blue-600 border-b-2 border-blue-600 transition-all flex items-center gap-2">
-                    <span>1. 현의 길이와 중심 거리</span>
-                </button>
-                <button id="tab2Btn" onclick="switchTab(2)" class="py-2 px-4 font-bold text-sm md:text-base text-gray-500 border-b-2 border-transparent hover:text-blue-600 transition-all flex items-center gap-2">
-                    <span>🧩 2. 깨진 접시 복원하기</span>
-                </button>
-            </div>
+            <!-- Tab Menu -->
+            <nav class="flex justify-center border-b border-slate-200">
+                <div class="flex max-w-full overflow-x-auto no-scrollbar gap-1 sm:gap-4 px-1">
+                    <button id="tab1Btn" onclick="switchTab(1)" 
+                        class="py-2.5 px-3 sm:px-5 font-bold text-xs sm:text-sm md:text-base text-blue-600 border-b-2 border-blue-600 transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0">
+                        <span>1. 현의 길이와 중심 거리</span>
+                    </button>
+                    <button id="tab2Btn" onclick="switchTab(2)" 
+                        class="py-2.5 px-3 sm:px-5 font-bold text-xs sm:text-sm md:text-base text-slate-500 border-b-2 border-transparent hover:text-amber-600 transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0">
+                        <span>🧩 2. 깨진 접시 복원하기</span>
+                    </button>
+                </div>
+            </nav>
         </header>
 
-        <!-- ==================== TAB 1: 현의 성질 체험 ==================== -->
-        <div id="tab1Content" class="flex flex-col gap-6">
-            <p class="text-sm md:text-base text-gray-600 text-center max-w-2xl mx-auto">
-                한 원에서 길이가 같은 현을 여러 개 그리면 어떤 모양이 나타날까요? <br class="hidden md:block">
+        <!-- ==================== TAB 1: CHORD PROPERTIES ==================== -->
+        <div id="tab1Content" class="flex flex-col gap-4 sm:gap-6">
+            <p class="text-xs sm:text-sm md:text-base text-slate-600 text-center max-w-2xl mx-auto leading-relaxed px-2">
+                한 원에서 길이가 같은 현을 여러 개 그리면 어떤 모양이 나타날까요? <br class="hidden sm:inline">
                 원을 드래그해서 현을 직접 그려보고, 가운데 생기는 빈 공간을 관찰해 보세요!
             </p>
 
-            <main class="flex flex-col md:flex-row gap-6 items-start">
+            <main class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start">
                 
-                <div class="w-full md:w-2/3 flex justify-center order-2 md:order-1">
-                    <div id="canvasWrapper" class="canvas-container w-full aspect-square bg-white rounded-2xl shadow-xl overflow-hidden relative border border-gray-200">
+                <!-- Canvas Area -->
+                <div class="lg:col-span-7 xl:col-span-8 flex justify-center w-full">
+                    <div id="canvasWrapper" class="canvas-container w-full max-w-[550px] aspect-square bg-white rounded-2xl shadow-md sm:shadow-lg overflow-hidden relative border border-slate-200/80">
                         <canvas id="mathCanvas" class="w-full h-full cursor-crosshair block"></canvas>
-                        <div id="drawingHint" class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-100 transition-opacity duration-500">
-                            <div class="bg-black/60 text-white px-4 py-2 rounded-full text-sm animate-pulse">
+                        <div id="drawingHint" class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-100 transition-opacity duration-500 p-4">
+                            <div class="bg-slate-900/80 backdrop-blur-sm text-white px-4 py-2.5 rounded-full text-xs sm:text-sm font-medium shadow-lg text-center animate-pulse">
                                 원을 따라 손가락이나 마우스를 드래그해보세요! 👆
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="w-full md:w-1/3 bg-white rounded-2xl shadow-xl p-6 flex flex-col gap-6 border border-gray-200 order-1 md:order-2">
+                <!-- Control Panel -->
+                <div class="lg:col-span-5 xl:col-span-4 bg-white rounded-2xl shadow-md sm:shadow-lg p-5 sm:p-6 flex flex-col gap-5 border border-slate-200/80">
                     
-                    <!-- 원리 설명 박스 -->
-                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                        <h3 class="font-bold text-blue-800 mb-2 flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <!-- Principle Box -->
+                    <div class="bg-blue-50/80 p-4 rounded-xl border border-blue-100">
+                        <h3 class="font-bold text-blue-900 text-sm sm:text-base mb-1.5 flex items-center gap-2">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
                             수학 원리
                         </h3>
-                        <p class="text-sm text-blue-900 leading-relaxed">
-                            한 원에서 <strong>길이가 같은 현은 원의 중심으로부터 같은 거리</strong>에 있습니다. 현을 많이 그릴수록 안쪽에 거리가 같은 만큼의 원 모양 공간이 생깁니다.
+                        <p class="text-xs sm:text-sm text-blue-900/90 leading-relaxed">
+                            한 원에서 <strong>길이가 같은 현은 원의 중심으로부터 같은 거리</strong>에 있습니다. 현을 많이 그릴수록 중심에서 거리가 같은 원 모양의 빈 공간이 생깁니다.
                         </p>
                     </div>
 
-                    <hr class="border-gray-100">
+                    <hr class="border-slate-100">
 
-                    <!-- 조작부 -->
+                    <!-- Controls -->
                     <div class="space-y-4">
                         <div>
                             <div class="flex justify-between items-center mb-2">
-                                <label for="chordLengthSlider" class="font-semibold text-gray-700 text-sm">현의 길이 조절</label>
-                                <span id="lengthPercent" class="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded">50%</span>
+                                <label for="chordLengthSlider" class="font-bold text-slate-700 text-xs sm:text-sm">현의 길이 조절</label>
+                                <span id="lengthPercent" class="text-xs font-extrabold text-blue-600 bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-md">50%</span>
                             </div>
                             <input type="range" id="chordLengthSlider" min="20" max="160" value="90" class="w-full">
-                            <p class="text-xs text-gray-400 mt-1">* 길이를 변경하면 화면이 초기화됩니다.</p>
+                            <p class="text-[11px] text-slate-400 mt-1">* 길이를 변경하면 화면이 초기화됩니다.</p>
                         </div>
 
-                        <div class="flex flex-col gap-3 pt-2">
-                            <div class="flex items-center gap-3">
-                                <input type="checkbox" id="showInnerCircle" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 cursor-pointer">
-                                <label for="showInnerCircle" class="text-sm font-semibold text-gray-700 cursor-pointer select-none">
+                        <div class="flex flex-col gap-2.5 pt-1">
+                            <label class="flex items-center gap-2.5 cursor-pointer select-none group">
+                                <input type="checkbox" id="showInnerCircle" class="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer">
+                                <span class="text-xs sm:text-sm font-semibold text-slate-700 group-hover:text-slate-900">
                                     안쪽 원(경계) 보기
-                                </label>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <input type="checkbox" id="showDistanceLines" class="w-5 h-5 text-emerald-600 rounded focus:ring-emerald-500 cursor-pointer" checked>
-                                <label for="showDistanceLines" class="text-sm font-semibold text-gray-700 cursor-pointer select-none">
+                                </span>
+                            </label>
+                            <label class="flex items-center gap-2.5 cursor-pointer select-none group">
+                                <input type="checkbox" id="showDistanceLines" class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer" checked>
+                                <span class="text-xs sm:text-sm font-semibold text-slate-700 group-hover:text-slate-900">
                                     중심에서 현까지의 거리(수선) 보기 📏
-                                </label>
-                            </div>
+                                </span>
+                            </label>
                         </div>
                     </div>
 
-                    <div class="flex gap-3 pt-2">
-                        <button id="btnAuto" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl shadow-md transition-colors active:scale-95 text-sm">
+                    <!-- Action Buttons -->
+                    <div class="flex gap-2.5 pt-2">
+                        <button id="btnAuto" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded-xl shadow-md shadow-blue-500/10 transition-all active:scale-[0.98] text-xs sm:text-sm">
                             자동으로 채우기
                         </button>
-                        <button id="btnClear" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-4 rounded-xl shadow-md transition-colors active:scale-95 text-sm">
+                        <button id="btnClear" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-3 rounded-xl transition-all active:scale-[0.98] text-xs sm:text-sm">
                             모두 지우기
                         </button>
                     </div>
@@ -133,63 +150,65 @@
             </main>
         </div>
 
-        <!-- ==================== TAB 2: 깨진 접시 복원하기 ==================== -->
-        <div id="tab2Content" class="hidden flex flex-col gap-6">
-            <p class="text-sm md:text-base text-gray-600 text-center max-w-2xl mx-auto">
-                원 모양의 고급 접시 파편이 발견되었습니다! <br class="hidden md:block">
+        <!-- ==================== TAB 2: BROKEN PLATE RESTORATION ==================== -->
+        <div id="tab2Content" class="hidden flex flex-col gap-4 sm:gap-6">
+            <p class="text-xs sm:text-sm md:text-base text-slate-600 text-center max-w-2xl mx-auto leading-relaxed px-2">
+                원 모양의 고급 접시 파편이 발견되었습니다! <br class="hidden sm:inline">
                 <strong>현의 수직이등분선의 성질</strong>을 활용해서 깨진 접시의 중심을 찾고 원래 크기로 복원해보세요!
             </p>
 
-            <main class="flex flex-col md:flex-row gap-6 items-start">
+            <main class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start">
                 
-                <div class="w-full md:w-2/3 flex justify-center order-2 md:order-1">
-                    <div id="plateCanvasWrapper" class="canvas-container w-full aspect-square bg-white rounded-2xl shadow-xl overflow-hidden relative border border-gray-200">
+                <!-- Canvas Area -->
+                <div class="lg:col-span-7 xl:col-span-8 flex justify-center w-full">
+                    <div id="plateCanvasWrapper" class="canvas-container w-full max-w-[550px] aspect-square bg-white rounded-2xl shadow-md sm:shadow-lg overflow-hidden relative border border-slate-200/80">
                         <canvas id="plateCanvas" class="w-full h-full cursor-pointer block"></canvas>
                         
-                        <div id="plateHint" class="absolute top-4 left-1/2 -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-full text-xs md:text-sm text-center shadow-lg pointer-events-none transition-all">
-                            깨진 접시의 매끄러운 곡선 테두리를 클릭하여 3개의 점을 찍어보세요!
+                        <div id="plateHint" class="absolute top-3 left-1/2 -translate-x-1/2 bg-slate-900/85 backdrop-blur-sm text-white px-3.5 py-2 rounded-full text-xs sm:text-sm font-medium text-center shadow-lg pointer-events-none transition-all w-[90%] sm:w-auto max-w-md">
+                            첫 번째 현(AB)의 첫 번째 점 A를 클릭하세요!
                         </div>
                     </div>
                 </div>
 
-                <div class="w-full md:w-1/3 bg-white rounded-2xl shadow-xl p-6 flex flex-col gap-6 border border-gray-200 order-1 md:order-2">
+                <!-- Control & Guide Panel -->
+                <div class="lg:col-span-5 xl:col-span-4 bg-white rounded-2xl shadow-md sm:shadow-lg p-5 sm:p-6 flex flex-col gap-5 border border-slate-200/80">
                     
-                    <!-- 수학 원리 가이드 -->
-                    <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
-                        <h3 class="font-bold text-amber-900 mb-2 flex items-center gap-2">
+                    <!-- Math Concept -->
+                    <div class="bg-amber-50/80 p-4 rounded-xl border border-amber-200/70">
+                        <h3 class="font-bold text-amber-900 text-sm sm:text-base mb-1.5 flex items-center gap-1.5">
                             🔍 핵심 수학 성질
                         </h3>
-                        <p class="text-xs md:text-sm text-amber-950 leading-relaxed">
+                        <p class="text-xs sm:text-sm text-amber-950 leading-relaxed">
                             <strong>"원에서 현의 수직이등분선은 항상 원의 중심을 지난다."</strong><br>
-                            따라서 서로 다른 두 현의 수직이등분선이 만나는 **교점**이 바로 이 원의 중심 $O$가 됩니다!
+                            따라서 서로 다른 두 현의 수직이등분선이 만나는 <strong>교점</strong>이 바로 원의 중심 <span class="font-serif font-bold text-red-600">O</span>가 됩니다!
                         </p>
                     </div>
 
-                    <!-- 복원 진행 단계 표시 -->
-                    <div class="space-y-3">
-                        <h4 class="font-bold text-gray-700 text-sm">복원 탐구 단계</h4>
-                        <div class="space-y-2 text-xs md:text-sm">
-                            <div id="step1Box" class="p-3 rounded-lg border bg-blue-50 border-blue-200 text-blue-900 font-medium">
+                    <!-- Steps Progress -->
+                    <div class="space-y-2.5">
+                        <h4 class="font-bold text-slate-800 text-xs sm:text-sm">복원 탐구 단계</h4>
+                        <div class="space-y-2 text-xs sm:text-sm">
+                            <div id="step1Box" class="p-3 rounded-xl border bg-blue-50 border-blue-200 text-blue-900 font-semibold transition-all">
                                 1단계: 테두리에 점 4개(현 2개) 지정하기 (<span id="selectedPointCount">0</span>/4)
                             </div>
-                            <div id="step2Box" class="p-3 rounded-lg border bg-gray-50 border-gray-200 text-gray-400">
+                            <div id="step2Box" class="p-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-400 font-medium transition-all">
                                 2단계: 두 현의 수직이등분선 그리기
                             </div>
-                            <div id="step3Box" class="p-3 rounded-lg border bg-gray-50 border-gray-200 text-gray-400">
+                            <div id="step3Box" class="p-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-400 font-medium transition-all">
                                 3단계: 교점(원의 중심 O) 찾고 접시 복원!
                             </div>
                         </div>
                     </div>
 
-                    <!-- 작동 버튼 -->
-                    <div class="flex flex-col gap-3 pt-2">
-                        <button id="btnAutoPoints" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 px-4 rounded-xl shadow-md transition-colors active:scale-95 text-sm">
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col gap-2.5 pt-1">
+                        <button id="btnAutoPoints" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-4 rounded-xl shadow-md shadow-amber-600/10 transition-all active:scale-[0.98] text-xs sm:text-sm">
                             ✨ 자동으로 점 지정하기
                         </button>
-                        <button id="btnRestorePlate" disabled class="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl shadow-md transition-colors active:scale-95 text-sm">
+                        <button id="btnRestorePlate" disabled class="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-xl shadow-md shadow-emerald-600/10 transition-all active:scale-[0.98] text-xs sm:text-sm">
                             🎨 원본 접시 완전 복원하기!
                         </button>
-                        <button id="btnResetPlate" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-4 rounded-xl shadow-md transition-colors active:scale-95 text-sm">
+                        <button id="btnResetPlate" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-xl transition-all active:scale-[0.98] text-xs sm:text-sm">
                             🔄 새로운 깨진 접시 준비
                         </button>
                     </div>
@@ -200,7 +219,7 @@
     </div>
 
     <script>
-        // Tab switching logic
+        // TAB SWITCHING LOGIC
         let currentTab = 1;
 
         function switchTab(tabIndex) {
@@ -211,17 +230,17 @@
             const t2Content = document.getElementById('tab2Content');
 
             if (tabIndex === 1) {
-                t1Btn.className = "py-2 px-4 font-bold text-sm md:text-base text-blue-600 border-b-2 border-blue-600 transition-all flex items-center gap-2";
-                t2Btn.className = "py-2 px-4 font-bold text-sm md:text-base text-gray-500 border-b-2 border-transparent hover:text-blue-600 transition-all flex items-center gap-2";
+                t1Btn.className = "py-2.5 px-3 sm:px-5 font-bold text-xs sm:text-sm md:text-base text-blue-600 border-b-2 border-blue-600 transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0";
+                t2Btn.className = "py-2.5 px-3 sm:px-5 font-bold text-xs sm:text-sm md:text-base text-slate-500 border-b-2 border-transparent hover:text-amber-600 transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0";
                 t1Content.classList.remove('hidden');
                 t2Content.classList.add('hidden');
-                setTimeout(resizeCanvas, 50);
+                requestAnimationFrame(resizeCanvas);
             } else {
-                t2Btn.className = "py-2 px-4 font-bold text-sm md:text-base text-amber-600 border-b-2 border-amber-600 transition-all flex items-center gap-2";
-                t1Btn.className = "py-2 px-4 font-bold text-sm md:text-base text-gray-500 border-b-2 border-transparent hover:text-blue-600 transition-all flex items-center gap-2";
+                t2Btn.className = "py-2.5 px-3 sm:px-5 font-bold text-xs sm:text-sm md:text-base text-amber-600 border-b-2 border-amber-600 transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0";
+                t1Btn.className = "py-2.5 px-3 sm:px-5 font-bold text-xs sm:text-sm md:text-base text-slate-500 border-b-2 border-transparent hover:text-blue-600 transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0";
                 t2Content.classList.remove('hidden');
                 t1Content.classList.add('hidden');
-                setTimeout(resizePlateCanvas, 50);
+                requestAnimationFrame(resizePlateCanvas);
             }
         }
 
@@ -247,17 +266,19 @@
         function resizeCanvas() {
             if (currentTab !== 1) return;
             const rect = wrapper.getBoundingClientRect();
+            if (rect.width === 0 || rect.height === 0) return;
+
             const dpr = window.devicePixelRatio || 1;
-            
             canvas.width = rect.width * dpr;
             canvas.height = rect.height * dpr;
+            ctx.resetTransform();
             ctx.scale(dpr, dpr);
             
             canvasW = rect.width;
             canvasH = rect.height;
             cx = canvasW / 2;
             cy = canvasH / 2;
-            outerR = Math.min(canvasW, canvasH) * 0.45;
+            outerR = Math.min(canvasW, canvasH) * 0.42;
             
             draw();
         }
@@ -273,22 +294,22 @@
             const theta = getChordAngle();
             const innerR = outerR * Math.cos(theta / 2);
 
-            // Draw outer circle
+            // Outer Circle Background
             ctx.beginPath();
             ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
-            ctx.fillStyle = '#f8fafc';
+            ctx.fillStyle = '#ffffff';
             ctx.fill();
             ctx.lineWidth = 3;
             ctx.strokeStyle = '#2563eb';
             ctx.stroke();
             
-            // Draw center dot
+            // Center Dot
             ctx.beginPath();
-            ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+            ctx.arc(cx, cy, 4.5, 0, Math.PI * 2);
             ctx.fillStyle = '#1e3a8a';
             ctx.fill();
 
-            // Draw all chords
+            // All Chords
             ctx.lineWidth = 1.5;
             ctx.strokeStyle = 'rgba(239, 68, 68, 0.35)';
 
@@ -307,9 +328,9 @@
                 ctx.stroke();
             });
 
-            // Draw perpendicular lines from center to each chord if checked
+            // Distance lines (perpendicular segments from center to chords)
             if (showDistanceCheck.checked && chords.length > 0) {
-                const lineOpacity = Math.max(0.2, Math.min(0.7, 20 / chords.length));
+                const lineOpacity = Math.max(0.15, Math.min(0.65, 18 / chords.length));
 
                 chords.forEach((alpha, index) => {
                     const isLatest = index === chords.length - 1;
@@ -329,7 +350,7 @@
                     ctx.fill();
 
                     if (isLatest || chords.length <= 6) {
-                        const s = 8;
+                        const s = 7;
                         const ux = -Math.sin(alpha);
                         const uy = Math.cos(alpha);
                         const vx = -Math.cos(alpha);
@@ -339,25 +360,25 @@
                         ctx.moveTo(mx + s * ux, my + s * uy);
                         ctx.lineTo(mx + s * ux + s * vx, my + s * uy + s * vy);
                         ctx.lineTo(mx + s * vx, my + s * vy);
-                        ctx.lineWidth = 1.5;
+                        ctx.lineWidth = 1.2;
                         ctx.strokeStyle = '#047857';
                         ctx.stroke();
                     }
                 });
             }
 
-            // Draw inner circle if toggled
+            // Inner circle (Boundary Envelope)
             if (showInnerCheck.checked) {
                 ctx.beginPath();
                 ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(16, 185, 129, 0.1)';
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.08)';
                 ctx.fill();
 
                 ctx.beginPath();
                 ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
                 ctx.lineWidth = 2;
                 ctx.strokeStyle = '#10b981';
-                ctx.setLineDash([6, 6]);
+                ctx.setLineDash([5, 5]);
                 ctx.stroke();
                 ctx.setLineDash([]);
             }
@@ -379,7 +400,7 @@
         }
 
         function tryAddChord(angle) {
-            if (lastAngle === null || Math.abs(angle - lastAngle) > 0.05 || Math.abs(angle - lastAngle) < -0.05 + Math.PI*2) {
+            if (lastAngle === null || Math.abs(angle - lastAngle) > 0.05) {
                 chords.push(angle);
                 lastAngle = angle;
                 draw();
@@ -387,7 +408,7 @@
         }
 
         function handleStart(e) {
-            e.preventDefault();
+            if (e.cancelable) e.preventDefault();
             isDrawing = true;
             hintText.style.opacity = '0';
             stopAuto();
@@ -397,13 +418,12 @@
 
         function handleMove(e) {
             if (!isDrawing) return;
-            e.preventDefault();
+            if (e.cancelable) e.preventDefault();
             const angle = getAngleFromEvent(e);
             tryAddChord(angle);
         }
 
         function handleEnd(e) {
-            e.preventDefault();
             isDrawing = false;
             lastAngle = null;
         }
@@ -417,7 +437,7 @@
         window.addEventListener('touchend', handleEnd, {passive: false});
 
         function updateSliderLabel() {
-            const val = parseInt(slider.value);
+            const val = parseInt(slider.value, 10);
             const percent = Math.round(((val - 20) / 140) * 100);
             lengthPercentLabel.textContent = `${percent}%`;
         }
@@ -443,17 +463,17 @@
             if (autoInterval) stopAuto();
             hintText.style.opacity = '0';
             let currentAngle = 0;
-            const step = Math.PI * 2 / 100;
+            const step = Math.PI * 2 / 90;
             
             btnAuto.textContent = "멈추기";
-            btnAuto.classList.replace('bg-blue-600', 'bg-red-500');
+            btnAuto.classList.replace('bg-blue-600', 'bg-rose-500');
 
             autoInterval = setInterval(() => {
                 chords.push(currentAngle);
                 draw();
                 currentAngle += step;
                 if (currentAngle >= Math.PI * 2) stopAuto();
-            }, 20);
+            }, 25);
         }
 
         function stopAuto() {
@@ -461,7 +481,7 @@
                 clearInterval(autoInterval);
                 autoInterval = null;
                 btnAuto.textContent = "자동으로 채우기";
-                btnAuto.classList.replace('bg-red-500', 'bg-blue-600');
+                btnAuto.classList.replace('bg-rose-500', 'bg-blue-600');
             }
         }
 
@@ -490,7 +510,7 @@
             radius: 0,
             startAngle: 0,
             endAngle: 0,
-            points: [], // Array of chosen points on arc
+            points: [], // Array of points on arc
             isRestored: false
         };
 
@@ -498,12 +518,11 @@
             const minDim = Math.min(pCanvasW || 300, pCanvasH || 300);
             const radius = minDim * 0.38;
             
-            // Random offset for center to make problem interesting
-            const offsetX = (Math.random() - 0.5) * (minDim * 0.15);
-            const offsetY = (Math.random() - 0.5) * (minDim * 0.15);
+            const offsetX = (Math.random() - 0.5) * (minDim * 0.12);
+            const offsetY = (Math.random() - 0.5) * (minDim * 0.12);
 
             const startAngle = Math.random() * Math.PI * 2;
-            const arcSpan = Math.PI * 0.8 + Math.random() * Math.PI * 0.3; // 144~198 degrees arc
+            const arcSpan = Math.PI * 0.85 + Math.random() * Math.PI * 0.25;
 
             plateState = {
                 center: { x: pCanvasW / 2 + offsetX, y: pCanvasH / 2 + offsetY },
@@ -521,10 +540,13 @@
         function resizePlateCanvas() {
             if (currentTab !== 2) return;
             const rect = plateWrapper.getBoundingClientRect();
+            if (rect.width === 0 || rect.height === 0) return;
+
             const dpr = window.devicePixelRatio || 1;
 
             plateCanvas.width = rect.width * dpr;
             plateCanvas.height = rect.height * dpr;
+            pCtx.resetTransform();
             pCtx.scale(dpr, dpr);
 
             pCanvasW = rect.width;
@@ -538,9 +560,9 @@
             selectedPointCountLabel.textContent = ptCount;
 
             if (ptCount < 4) {
-                step1Box.className = "p-3 rounded-lg border bg-blue-50 border-blue-200 text-blue-900 font-medium animate-pulse";
-                step2Box.className = "p-3 rounded-lg border bg-gray-50 border-gray-200 text-gray-400";
-                step3Box.className = "p-3 rounded-lg border bg-gray-50 border-gray-200 text-gray-400";
+                step1Box.className = "p-3 rounded-xl border bg-blue-50 border-blue-200 text-blue-900 font-semibold animate-pulse";
+                step2Box.className = "p-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-400 font-medium";
+                step3Box.className = "p-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-400 font-medium";
                 btnRestorePlate.disabled = true;
 
                 if (ptCount === 0) {
@@ -553,9 +575,9 @@
                     plateHint.textContent = "두 번째 현(CD)의 두 번째 점 D를 클릭하세요!";
                 }
             } else {
-                step1Box.className = "p-3 rounded-lg border bg-emerald-50 border-emerald-200 text-emerald-900 font-medium";
-                step2Box.className = "p-3 rounded-lg border bg-blue-50 border-blue-200 text-blue-900 font-medium";
-                step3Box.className = "p-3 rounded-lg border bg-amber-50 border-amber-200 text-amber-900 font-medium animate-pulse";
+                step1Box.className = "p-3 rounded-xl border bg-emerald-50 border-emerald-200 text-emerald-900 font-semibold";
+                step2Box.className = "p-3 rounded-xl border bg-blue-50 border-blue-200 text-blue-900 font-semibold";
+                step3Box.className = "p-3 rounded-xl border bg-amber-50 border-amber-200 text-amber-900 font-semibold animate-pulse";
                 btnRestorePlate.disabled = false;
                 plateHint.textContent = "두 현의 수직이등분선 교점(원의 중심 O)을 찾았습니다! '접시 완전 복원하기'를 눌러보세요!";
             }
@@ -566,19 +588,18 @@
 
             const { center, radius, startAngle, endAngle, points, isRestored } = plateState;
 
-            // Draw full restored plate if restored
+            // Full restored plate
             if (isRestored) {
                 pCtx.beginPath();
                 pCtx.arc(center.x, center.y, radius, 0, Math.PI * 2);
-                pCtx.fillStyle = 'rgba(219, 234, 254, 0.4)'; // blue tint
+                pCtx.fillStyle = 'rgba(219, 234, 254, 0.45)';
                 pCtx.fill();
                 pCtx.lineWidth = 4;
                 pCtx.strokeStyle = '#2563eb';
                 pCtx.stroke();
 
-                // Decorative ceramic plate ring pattern
                 pCtx.beginPath();
-                pCtx.arc(center.x, center.y, radius * 0.85, 0, Math.PI * 2);
+                pCtx.arc(center.x, center.y, radius * 0.82, 0, Math.PI * 2);
                 pCtx.lineWidth = 1.5;
                 pCtx.strokeStyle = '#93c5fd';
                 pCtx.setLineDash([4, 4]);
@@ -586,12 +607,11 @@
                 pCtx.setLineDash([]);
             }
 
-            // Draw broken plate piece body
+            // Broken piece body
             pCtx.save();
             pCtx.beginPath();
             pCtx.arc(center.x, center.y, radius, startAngle, endAngle);
             
-            // Draw jagged broken inner boundary line
             const innerSteps = 12;
             const startP = { x: center.x + radius * Math.cos(endAngle), y: center.y + radius * Math.sin(endAngle) };
             pCtx.lineTo(startP.x, startP.y);
@@ -599,76 +619,73 @@
             for (let i = innerSteps; i >= 0; i--) {
                 const t = i / innerSteps;
                 const ang = startAngle + (endAngle - startAngle) * t;
-                const jagR = radius * (0.35 + 0.15 * Math.sin(i * 2.3));
+                const jagR = radius * (0.38 + 0.14 * Math.sin(i * 2.3));
                 const px = center.x + jagR * Math.cos(ang);
                 const py = center.y + jagR * Math.sin(ang);
                 pCtx.lineTo(px, py);
             }
 
             pCtx.closePath();
-            pCtx.fillStyle = '#f1f5f9';
+            pCtx.fillStyle = '#f8fafc';
             pCtx.fill();
             pCtx.lineWidth = 3;
             pCtx.strokeStyle = '#64748b';
             pCtx.stroke();
             pCtx.restore();
 
-            // Highlight the outer arc (smooth circle portion)
+            // Highlight outer arc
             pCtx.beginPath();
             pCtx.arc(center.x, center.y, radius, startAngle, endAngle);
             pCtx.lineWidth = 5;
             pCtx.strokeStyle = '#0284c7';
             pCtx.stroke();
 
-            // Render selected points (A, B, C, D)
+            // Render selected points A, B, C, D
             const labels = ['A', 'B', 'C', 'D'];
             points.forEach((pt, idx) => {
                 pCtx.beginPath();
-                pCtx.arc(pt.x, pt.y, 6, 0, Math.PI * 2);
-                pCtx.fillStyle = idx < 2 ? '#d97706' : '#2563eb'; // Amber for AB, Blue for CD
+                pCtx.arc(pt.x, pt.y, 6.5, 0, Math.PI * 2);
+                pCtx.fillStyle = idx < 2 ? '#d97706' : '#2563eb';
                 pCtx.fill();
                 pCtx.lineWidth = 2;
                 pCtx.strokeStyle = '#ffffff';
                 pCtx.stroke();
 
-                pCtx.font = 'bold 14px Inter';
+                pCtx.font = 'bold 14px Inter, sans-serif';
                 pCtx.fillStyle = idx < 2 ? '#b45309' : '#1d4ed8';
                 pCtx.fillText(labels[idx], pt.x + 10, pt.y - 10);
             });
 
-            // If points >= 2, draw first chord AB
+            // Draw chord AB & bisector
             if (points.length >= 2) {
-                drawChordAndBisector(points[0], points[1], "현 AB");
+                drawChordAndBisector(points[0], points[1]);
             }
-            // If points >= 4, draw second chord CD and center intersection
+            // Draw chord CD & bisector & center
             if (points.length >= 4) {
-                drawChordAndBisector(points[2], points[3], "현 CD");
+                drawChordAndBisector(points[2], points[3]);
 
-                // Calculate center intersection point between AB bisector and CD bisector
                 const centerIntersection = calculatePerpendicularBisectorIntersection(points[0], points[1], points[2], points[3]);
 
                 if (centerIntersection) {
-                    // Draw center dot O
                     pCtx.beginPath();
-                    pCtx.arc(centerIntersection.x, centerIntersection.y, 7, 0, Math.PI * 2);
-                    pCtx.fillStyle = '#dc2626'; // Red-600
+                    pCtx.arc(centerIntersection.x, centerIntersection.y, 7.5, 0, Math.PI * 2);
+                    pCtx.fillStyle = '#dc2626';
                     pCtx.fill();
-                    pCtx.lineWidth = 2;
+                    pCtx.lineWidth = 2.5;
                     pCtx.strokeStyle = '#ffffff';
                     pCtx.stroke();
 
-                    pCtx.font = 'bold 16px Inter';
+                    pCtx.font = 'bold 15px Inter, sans-serif';
                     pCtx.fillStyle = '#dc2626';
                     pCtx.fillText("원의 중심 O", centerIntersection.x + 12, centerIntersection.y + 5);
 
-                    // Radius lines from center to A, B, C, D
                     if (isRestored) {
                         points.forEach((pt) => {
                             pCtx.beginPath();
                             pCtx.moveTo(centerIntersection.x, centerIntersection.y);
                             pCtx.lineTo(pt.x, pt.y);
                             pCtx.lineWidth = 1.5;
-                            pCtx.strokeStyle = 'rgba(220, 38, 38, 0.4)';
+                            pCtx.strokeStyle = 'rgba(220, 38, 38, 0.45)';
                             pCtx.setLineDash([3, 3]);
                             pCtx.stroke();
                             pCtx.setLineDash([]);
@@ -678,16 +695,16 @@
             }
         }
 
-        function drawChordAndBisector(p1, p2, labelText) {
-            // Chord line segment
+        function drawChordAndBisector(p1, p2) {
+            // Chord line
             pCtx.beginPath();
             pCtx.moveTo(p1.x, p1.y);
             pCtx.lineTo(p2.x, p2.y);
             pCtx.lineWidth = 2.5;
-            pCtx.strokeStyle = '#2563eb'; // Blue
+            pCtx.strokeStyle = '#2563eb';
             pCtx.stroke();
 
-            // Midpoint M
+            // Midpoint
             const mx = (p1.x + p2.x) / 2;
             const my = (p1.y + p2.y) / 2;
 
@@ -696,28 +713,26 @@
             pCtx.fillStyle = '#2563eb';
             pCtx.fill();
 
-            // Perpendicular Bisector direction
+            // Perpendicular Bisector
             const dx = p2.x - p1.x;
             const dy = p2.y - p1.y;
             const len = Math.hypot(dx, dy);
             if (len === 0) return;
 
-            // Normal vector (-dy, dx)
             const nx = -dy / len;
             const ny = dx / len;
 
-            // Draw long bisector line passing through M
             const bisectorLen = Math.max(pCanvasW, pCanvasH);
             pCtx.beginPath();
             pCtx.moveTo(mx - nx * bisectorLen, my - ny * bisectorLen);
             pCtx.lineTo(mx + nx * bisectorLen, my + ny * bisectorLen);
             pCtx.lineWidth = 1.5;
-            pCtx.strokeStyle = '#059669'; // Emerald green
+            pCtx.strokeStyle = '#059669';
             pCtx.setLineDash([5, 5]);
             pCtx.stroke();
             pCtx.setLineDash([]);
 
-            // Draw Right Angle symbol at midpoint
+            // Right Angle Symbol
             const s = 7;
             const ux = dx / len;
             const uy = dy / len;
@@ -747,24 +762,29 @@
             };
         }
 
-        // Handle clicks on Plate Canvas
         function handlePlateClick(e) {
             if (plateState.points.length >= 4) return;
 
             const rect = plateCanvas.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const clickY = e.clientY - rect.top;
+            let clientX, clientY;
+            if (e.changedTouches && e.changedTouches.length > 0) {
+                clientX = e.changedTouches[0].clientX;
+                clientY = e.changedTouches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
 
-            // Project clicked position onto the outer circle arc for precision
+            const clickX = clientX - rect.left;
+            const clickY = clientY - rect.top;
+
             const dx = clickX - plateState.center.x;
             const dy = clickY - plateState.center.y;
             const clickAngle = Math.atan2(dy, dx);
 
-            // Normalize angle relative to startAngle
             let normAngle = clickAngle;
             while (normAngle < plateState.startAngle) normAngle += Math.PI * 2;
             
-            // Snap point to outer arc if near
             const snapX = plateState.center.x + plateState.radius * Math.cos(normAngle);
             const snapY = plateState.center.y + plateState.radius * Math.sin(normAngle);
 
@@ -780,10 +800,10 @@
             const span = endAngle - startAngle;
 
             plateState.points = [
-                { x: center.x + radius * Math.cos(startAngle + span * 0.10), y: center.y + radius * Math.sin(startAngle + span * 0.10) },
-                { x: center.x + radius * Math.cos(startAngle + span * 0.40), y: center.y + radius * Math.sin(startAngle + span * 0.40) },
-                { x: center.x + radius * Math.cos(startAngle + span * 0.60), y: center.y + radius * Math.sin(startAngle + span * 0.60) },
-                { x: center.x + radius * Math.cos(startAngle + span * 0.90), y: center.y + radius * Math.sin(startAngle + span * 0.90) }
+                { x: center.x + radius * Math.cos(startAngle + span * 0.12), y: center.y + radius * Math.sin(startAngle + span * 0.12) },
+                { x: center.x + radius * Math.cos(startAngle + span * 0.42), y: center.y + radius * Math.sin(startAngle + span * 0.42) },
+                { x: center.x + radius * Math.cos(startAngle + span * 0.62), y: center.y + radius * Math.sin(startAngle + span * 0.62) },
+                { x: center.x + radius * Math.cos(startAngle + span * 0.88), y: center.y + radius * Math.sin(startAngle + span * 0.88) }
             ];
 
             updateStepsUI();
@@ -800,18 +820,23 @@
             initPlateState();
         });
 
-        // Window resize event
-        window.addEventListener('resize', () => {
-            resizeCanvas();
-            resizePlateCanvas();
+        // ResizeObserver for ultra-smooth responsiveness
+        const resizeObserver = new ResizeObserver(() => {
+            requestAnimationFrame(() => {
+                resizeCanvas();
+                resizePlateCanvas();
+            });
         });
 
-        // Initialize setup
+        resizeObserver.observe(wrapper);
+        resizeObserver.observe(plateWrapper);
+
+        // Initial setup
         updateSliderLabel();
         setTimeout(() => {
             resizeCanvas();
             resizePlateCanvas();
-        }, 100);
+        }, 80);
 
     </script>
 </body>
